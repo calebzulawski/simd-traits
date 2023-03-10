@@ -3,7 +3,10 @@ use core::simd::{LaneCount, Mask, MaskElement, Simd, SimdElement, SupportedLaneC
 /// A SIMD vector.
 ///
 /// This is not necessarily a specific hardware type, but any kind of parallel collection.
-pub trait Vector: Sized {
+///
+/// # Safety
+/// `ELEMENTS` must correspond to the number of elements in the vector.
+pub unsafe trait Vector: Sized {
     type Scalar;
     const ELEMENTS: usize;
 
@@ -23,7 +26,7 @@ pub trait Vector: Sized {
     }
 }
 
-impl<T, const N: usize> Vector for Simd<T, N>
+unsafe impl<T, const N: usize> Vector for Simd<T, N>
 where
     T: SimdElement,
     LaneCount<N>: SupportedLaneCount,
@@ -44,7 +47,7 @@ where
     }
 }
 
-impl<T, const N: usize> Vector for Mask<T, N>
+unsafe impl<T, const N: usize> Vector for Mask<T, N>
 where
     T: MaskElement,
     LaneCount<N>: SupportedLaneCount,
