@@ -1,5 +1,10 @@
 #![no_std]
+#![feature(portable_simd)]
 
-pub mod mask;
-pub mod num;
-pub mod vector;
+mod mask;
+mod num;
+mod vector;
+
+pub use mask::*;
+pub use num::*;
+pub use vector::*;
