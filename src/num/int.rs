@@ -34,7 +34,10 @@ macro_rules! impl_int {
 impl_int! { i8, i16, i32, i64, u8, u16, u32, u64 }
 
 /// A vector of signed integers.
-pub trait SignedInt: Int + crate::Signed + SimdInt {}
+pub trait SignedInt:
+    Int + crate::Signed + SimdInt<Scalar = <Self as crate::Vector>::Scalar>
+{
+}
 
 macro_rules! impl_signedint {
     { $($type:ty),* } => {
@@ -51,7 +54,10 @@ macro_rules! impl_signedint {
 impl_signedint! { i8, i16, i32, i64 }
 
 /// A vector of unsigned integers.
-pub trait UnsignedInt: Int + crate::Unsigned + SimdUint {}
+pub trait UnsignedInt:
+    Int + crate::Unsigned + SimdUint<Scalar = <Self as crate::Vector>::Scalar>
+{
+}
 
 macro_rules! impl_signedint {
     { $($type:ty),* } => {
