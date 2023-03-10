@@ -1,6 +1,6 @@
 use core::{
     ops,
-    simd::{LaneCount, Simd, SupportedLaneCount},
+    simd::{LaneCount, Simd, SimdInt, SimdUint, SupportedLaneCount},
 };
 
 /// A vector of integer numbers.
@@ -32,3 +32,37 @@ macro_rules! impl_int {
 }
 
 impl_int! { i8, i16, i32, i64, u8, u16, u32, u64 }
+
+/// A vector of signed integers.
+pub trait SignedInt: Int + crate::Signed + SimdInt {}
+
+macro_rules! impl_signedint {
+    { $($type:ty),* } => {
+        $(
+        impl<const N: usize> SignedInt for Simd<$type, N>
+        where
+            LaneCount<N>: SupportedLaneCount,
+        {
+        }
+        )*
+    }
+}
+
+impl_signedint! { i8, i16, i32, i64 }
+
+/// A vector of unsigned integers.
+pub trait UnsignedInt: Int + crate::Unsigned + SimdUint {}
+
+macro_rules! impl_signedint {
+    { $($type:ty),* } => {
+        $(
+        impl<const N: usize> UnsignedInt for Simd<$type, N>
+        where
+            LaneCount<N>: SupportedLaneCount,
+        {
+        }
+        )*
+    }
+}
+
+impl_signedint! { u8, u16, u32, u64 }

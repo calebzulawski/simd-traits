@@ -1,7 +1,7 @@
-use core::simd::{LaneCount, Simd, SupportedLaneCount};
+use core::simd::{LaneCount, Simd, SimdFloat, SupportedLaneCount};
 
 /// A vector of floating point numbers.
-pub trait Float: crate::Signed {}
+pub trait Float: crate::Signed + SimdFloat {}
 
 macro_rules! impl_float {
     { $($type:ty),* } => {
