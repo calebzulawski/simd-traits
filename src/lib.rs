@@ -2,8 +2,10 @@
 #![no_std]
 #![feature(portable_simd)]
 
+mod array;
 mod mask;
 mod vector;
+pub use array::*;
 pub use mask::*;
 pub use vector::*;
 
