@@ -1,22 +1,46 @@
-name: Rust
+name: Build
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
-env:
-  CARGO_TERM_COLOR: always
+on: [push]
 
 jobs:
-  build:
+  test:
+    strategy:
+      matrix:
+        version:
+          - nightly
+        os:
+          - ubuntu-latest
+        features:
+          - --all-features
+          - --no-default-features
 
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.os }}
+    
     steps:
-    - uses: actions/checkout@v3
-    - name: Build
-      run: cargo build --verbose
+    - uses: actions/checkout@v1
+    - name: Install toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: ${{ matrix.version }}
+        override: true
+        profile: minimal
     - name: Run tests
-      run: cargo test --verbose
+      run: cargo test --verbose ${{ matrix.features }}
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        override: true
+        profile: minimal
+        components: clippy, rustfmt
+    - name: Clippy lint
+      run: cargo clippy --all-features --all-targets -- -D warnings
+    - name: Clippy lint no-std
+      run: cargo clippy --no-default-features --all-targets -- -D warnings
+    - name: Check formatting
+      run: cargo fmt -- --check
