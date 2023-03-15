@@ -8,7 +8,7 @@ use core::{
 pub trait Mask:
     Vector<Scalar = bool>
     + PartialEq
-    + ops::Not
+    + ops::Not<Output = Self>
     + ops::BitAnd<Output = Self>
     + ops::BitAndAssign
     + ops::BitOr<Output = Self>
