@@ -7,25 +7,48 @@ use core::simd::{LaneCount, Mask, MaskElement, Simd, SimdElement, SupportedLaneC
 /// # Safety
 /// `ELEMENTS` must correspond to the number of elements in the vector.
 pub unsafe trait Vector: Sized {
+    /// The scalar type contained by this vector.
     type Scalar;
+
+    /// The type that masks this vector.
     type Mask: crate::Mask;
+
+    /// The number of elements contained by this vector.
     const ELEMENTS: usize;
 
+    /// Create a new vector filled with this scalar.
     fn splat(value: Self::Scalar) -> Self;
 
+    /// Extract an element.
+    ///
+    /// # Safety
+    /// `index` must be less than `ELEMENTS`.
     unsafe fn extract_unchecked(&self, index: usize) -> Self::Scalar;
+
+    /// Replace an element.
+    ///
+    /// # Safety
+    /// `index` must be less than `ELEMENTS`.
     unsafe fn insert_unchecked(&mut self, index: usize, value: Self::Scalar);
 
+    /// Extract an element.
     fn extract(&self, index: usize) -> Self::Scalar {
         assert!(index < Self::ELEMENTS);
         unsafe { self.extract_unchecked(index) }
     }
 
+    /// Replace an element.
     fn insert(&mut self, index: usize, value: Self::Scalar) {
         assert!(index < Self::ELEMENTS);
         unsafe { self.insert_unchecked(index, value) }
     }
 
+    /// Create a new vector by selecting conditionally from two vectors.
+    ///
+    /// For every true value in `mask`, select from `true_values`, otherwise select from
+    /// `false_values`.
+    ///
+    /// See [`Mask::select`], which may be more ergonomic.
     fn select(mask: &Self::Mask, true_values: Self, false_values: Self) -> Self;
 }
 

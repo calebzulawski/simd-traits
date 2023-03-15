@@ -8,6 +8,7 @@ use core::{
 pub trait Mask:
     Vector<Scalar = bool>
     + PartialEq
+    + ops::Not
     + ops::BitAnd<Output = Self>
     + ops::BitAndAssign
     + ops::BitOr<Output = Self>
@@ -15,6 +16,10 @@ pub trait Mask:
     + ops::BitXor<Output = Self>
     + ops::BitXorAssign
 {
+    /// Conditionally select from two vectors.
+    ///
+    /// For every true value, select from `true_values`, otherwise select from
+    /// `false_values`.
     fn select<V>(&self, true_value: V, false_value: V) -> V
     where
         V: Vector<Mask = Self>,

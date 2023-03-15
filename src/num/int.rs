@@ -5,7 +5,7 @@ use core::{
 
 /// A vector of integer numbers.
 pub trait Int:
-    crate::Num
+    super::Num
     + ops::BitAnd<Output = Self>
     + ops::BitOr<Output = Self>
     + ops::BitXor<Output = Self>
@@ -35,7 +35,7 @@ impl_int! { i8, i16, i32, i64, u8, u16, u32, u64 }
 
 /// A vector of signed integers.
 pub trait SignedInt:
-    Int + crate::Signed + SimdInt<Scalar = <Self as crate::Vector>::Scalar>
+    Int + super::Signed + SimdInt<Scalar = <Self as crate::Vector>::Scalar>
 {
 }
 
@@ -55,7 +55,7 @@ impl_signedint! { i8, i16, i32, i64 }
 
 /// A vector of unsigned integers.
 pub trait UnsignedInt:
-    Int + crate::Unsigned + SimdUint<Scalar = <Self as crate::Vector>::Scalar>
+    Int + super::Unsigned + SimdUint<Scalar = <Self as crate::Vector>::Scalar>
 {
 }
 

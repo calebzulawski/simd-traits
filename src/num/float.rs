@@ -1,7 +1,7 @@
 use core::simd::{LaneCount, Simd, SimdFloat, SupportedLaneCount};
 
 /// A vector of floating point numbers.
-pub trait Float: crate::Signed + SimdFloat<Scalar = <Self as crate::Vector>::Scalar> {}
+pub trait Float: super::Signed + SimdFloat<Scalar = <Self as crate::Vector>::Scalar> {}
 
 macro_rules! impl_float {
     { $($type:ty),* } => {

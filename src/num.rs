@@ -1,3 +1,5 @@
+//! Numeric traits for generic SIMD mathematics.
+
 mod float;
 mod int;
 
