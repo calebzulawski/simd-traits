@@ -1,11 +1,44 @@
+//! Operations for rearranging SIMD vectors.
+
 use crate::Vector;
 use core::simd::{LaneCount, Simd, SimdElement, SupportedLaneCount};
 
+/// Rearrange a vector.
+///
+/// ```
+/// # #![feature(portable_simd)]
+/// use core::simd::Simd;
+/// use simd_traits::swizzle::swizzle;
+///
+/// let a = Simd::from_array([1, 2, 3, 4]);
+/// let b = swizzle!(a, &[0, 3, 0, 1]);
+/// assert_eq!(b.to_array(), [1, 4, 1, 2]);
+/// ```
+#[macro_export]
+macro_rules! swizzle {
+    { $vector:expr, $index:expr } => {
+        {
+            struct __Index;
+            impl $crate::swizzle::SwizzleIndex for __Index {
+                const INDEX: &'static [usize] = $index;
+            }
+            $crate::swizzle::Swizzle::swizzle::<__Index>($vector)
+        }
+    }
+}
+pub use swizzle;
+
+/// Indices of the source vector used to create a new vector.
 pub trait SwizzleIndex {
     const INDEX: &'static [usize];
 }
 
-pub trait Swizzle<To>: Vector {
+/// Rearrange a vector, possibly changing its size.
+pub trait Swizzle<To>: Vector
+where
+    To: Vector<Scalar = Self::Scalar>,
+{
+    /// Create a new vector by selecting elements of this vector.
     fn swizzle<I: SwizzleIndex>(self) -> To;
 }
 
@@ -38,6 +71,7 @@ where
     }
 }
 
+/// Rearrange a vector.
 pub trait Shuffle: Vector {
     fn reverse(self) -> Self;
     fn interleave(self, other: Self) -> (Self, Self);
