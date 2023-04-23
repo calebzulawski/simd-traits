@@ -10,3 +10,4 @@ pub use mask::*;
 pub use vector::*;
 
 pub mod num;
+pub mod swizzle;
