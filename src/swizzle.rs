@@ -89,10 +89,20 @@ where
     }
 
     fn interleave(self, other: Self) -> (Self, Self) {
-        Simd::interleave(self, other)
+        // https://github.com/rust-lang/portable-simd/issues/298
+        if Self::ELEMENTS == 1 {
+            (self, other)
+        } else {
+            Simd::interleave(self, other)
+        }
     }
 
     fn deinterleave(self, other: Self) -> (Self, Self) {
-        Simd::deinterleave(self, other)
+        // https://github.com/rust-lang/portable-simd/issues/298
+        if Self::ELEMENTS == 1 {
+            (self, other)
+        } else {
+            Simd::deinterleave(self, other)
+        }
     }
 }
