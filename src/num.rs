@@ -3,6 +3,7 @@
 mod float;
 mod int;
 
+pub mod cast;
 pub use float::*;
 pub use int::*;
 
@@ -27,9 +28,19 @@ pub trait Num:
     + ops::DivAssign
     + ops::RemAssign
 {
+    /// Create a vector containing all zeros.
     fn zero() -> Self;
 
+    /// Create a vector containing all ones.
     fn one() -> Self;
+
+    /// Cast this vector's elements to another type.
+    fn cast<T>(self) -> <Self as cast::CastTo<T>>::Output
+    where
+        Self: cast::CastTo<T>,
+    {
+        self.cast_to()
+    }
 }
 
 macro_rules! impl_num {
