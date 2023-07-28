@@ -65,7 +65,7 @@ where
         use core::simd::Swizzle;
         struct Impl<const FROM: usize, const TO: usize, I: SwizzleIndex>(I);
         impl<const FROM: usize, const TO: usize, I: SwizzleIndex> Swizzle<FROM, TO> for Impl<FROM, TO, I> {
-            const INDEX: [usize; TO] = to_array(&I::INDEX);
+            const INDEX: [usize; TO] = to_array(I::INDEX);
         }
         Impl::<N, M, I>::swizzle(self)
     }
