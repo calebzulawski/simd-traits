@@ -4,71 +4,50 @@ use crate::Vector;
 use core::simd::{LaneCount, Simd, SimdFloat, SimdInt, SimdUint, SupportedLaneCount};
 
 /// Cast a vector's element type.
-pub trait CastTo<T>: Vector {
-    /// The output vector type.
-    type Output: Vector<Scalar = T>;
-
+pub trait CastFrom<T: Vector>: Vector {
     /// Cast the vector.
-    fn cast_to(self) -> Self::Output;
+    fn cast_from(from: T) -> Self;
 }
 
-macro_rules! impl_cast_to {
+macro_rules! impl_cast_from {
     { $($to:ty),* => $from:ty => $trait:ident } => {
         $(
-        impl<const N: usize> CastTo<$to> for Simd<$from, N>
+        impl<const N: usize> CastFrom<Simd<$from, N>> for Simd<$to, N>
         where
             LaneCount<N>: SupportedLaneCount,
         {
-            type Output = Simd<$to, N>;
-            fn cast_to(self) -> Self::Output {
-                $trait::cast::<$to>(self)
+            fn cast_from(from: Simd<$from, N>) -> Self {
+                $trait::cast::<$to>(from)
             }
         }
         )*
     };
     { $trait:ident for $($from:ty),* } => {
         $(
-        impl_cast_to! { u8, u16, u32, u64, usize, i8, i16, i32, i64, isize => $from => $trait }
+        impl_cast_from! { u8, u16, u32, u64, usize, i8, i16, i32, i64, isize => $from => $trait }
         )*
     };
     {} => {
-        impl_cast_to! { SimdUint for u8, u16, u32, u64, usize }
-        impl_cast_to! { SimdInt for i8, i16, i32, i64, isize }
-        impl_cast_to! { SimdFloat for f32, f64 }
+        impl_cast_from! { SimdUint for u8, u16, u32, u64, usize }
+        impl_cast_from! { SimdInt for i8, i16, i32, i64, isize }
+        impl_cast_from! { SimdFloat for f32, f64 }
     }
 }
 
-impl_cast_to! {}
+impl_cast_from! {}
 
-/// Cast a vector's element to any primitive type.
-pub trait CastPrimitive:
-    CastTo<u8>
-    + CastTo<u16>
-    + CastTo<u32>
-    + CastTo<u64>
-    + CastTo<usize>
-    + CastTo<i8>
-    + CastTo<i16>
-    + CastTo<i32>
-    + CastTo<i64>
-    + CastTo<isize>
-    + CastTo<f32>
-    + CastTo<f64>
-{
+/// Cast a vector's element type.
+pub trait CastTo<T: Vector>: Vector {
+    /// Cast the vector.
+    fn cast_to(self) -> T;
 }
 
-impl<T> CastPrimitive for T where
-    T: CastTo<u8>
-        + CastTo<u16>
-        + CastTo<u32>
-        + CastTo<u64>
-        + CastTo<usize>
-        + CastTo<i8>
-        + CastTo<i16>
-        + CastTo<i32>
-        + CastTo<i64>
-        + CastTo<isize>
-        + CastTo<f32>
-        + CastTo<f64>
+impl<T, U> CastTo<T> for U
+where
+    U: Vector,
+    T: CastFrom<U>,
 {
+    fn cast_to(self) -> T {
+        T::cast_from(self)
+    }
 }

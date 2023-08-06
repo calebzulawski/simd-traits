@@ -33,14 +33,6 @@ pub trait Num:
 
     /// Create a vector containing all ones.
     fn one() -> Self;
-
-    /// Cast this vector's elements to another type.
-    fn cast<T>(self) -> <Self as cast::CastTo<T>>::Output
-    where
-        Self: cast::CastTo<T>,
-    {
-        self.cast_to()
-    }
 }
 
 macro_rules! impl_num {
