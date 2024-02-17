@@ -5,7 +5,7 @@ use core::simd::{LaneCount, Simd, SimdElement, SupportedLaneCount};
 /// # Safety
 /// The layout of this vector must be array-like.  More specifically, references to this vector
 /// must be transmutable to slices.
-unsafe trait Array: crate::Vector + AsRef<[Self::Scalar]> + AsMut<[Self::Scalar]> {}
+pub unsafe trait Array: crate::Vector + AsRef<[Self::Scalar]> + AsMut<[Self::Scalar]> {}
 
 unsafe impl<T, const N: usize> Array for Simd<T, N>
 where

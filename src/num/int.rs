@@ -1,6 +1,6 @@
 use core::{
     ops,
-    simd::{LaneCount, Simd, SimdInt, SimdUint, SupportedLaneCount},
+    simd::{prelude::*, LaneCount, SupportedLaneCount},
 };
 
 /// A vector of integer numbers.

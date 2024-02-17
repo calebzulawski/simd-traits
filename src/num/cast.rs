@@ -1,7 +1,7 @@
 //! Cast element types.
 
 use crate::Vector;
-use core::simd::{LaneCount, Simd, SimdFloat, SimdInt, SimdUint, SupportedLaneCount};
+use core::simd::{prelude::*, LaneCount, SupportedLaneCount};
 
 /// Cast a vector's element type.
 pub trait CastFrom<T: Vector>: Vector {

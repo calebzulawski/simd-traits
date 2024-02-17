@@ -1,4 +1,4 @@
-use core::simd::{LaneCount, Simd, SimdFloat, SupportedLaneCount};
+use core::simd::{prelude::*, LaneCount, SupportedLaneCount};
 
 /// A vector of floating point numbers.
 pub trait Float: super::Signed + SimdFloat<Scalar = <Self as crate::Vector>::Scalar> {}

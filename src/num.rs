@@ -10,7 +10,7 @@ pub use int::*;
 use crate::Vector;
 use core::{
     ops,
-    simd::{LaneCount, Simd, SupportedLaneCount},
+    simd::{prelude::*, LaneCount, SupportedLaneCount},
 };
 
 /// A vector of numbers.
