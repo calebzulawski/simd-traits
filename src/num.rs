@@ -33,10 +33,16 @@ pub trait Num:
 
     /// Create a vector containing all ones.
     fn one() -> Self;
+
+    /// Return the maximum element in the vector.
+    fn reduce_max(self) -> Self::Scalar;
+
+    /// Return the minimum element in the vector.
+    fn reduce_min(self) -> Self::Scalar;
 }
 
 macro_rules! impl_num {
-    { $($type:ty),* } => {
+    { $($type:ty: $trait:ident),* } => {
         $(
         impl<const N: usize> Num for Simd<$type, N>
         where
@@ -49,12 +55,31 @@ macro_rules! impl_num {
             fn one() -> Self {
                 Simd::splat(1 as $type)
             }
+
+            fn reduce_max(self) -> Self::Scalar {
+                <Self as $trait>::reduce_max(self)
+            }
+
+            fn reduce_min(self) -> Self::Scalar {
+                <Self as $trait>::reduce_min(self)
+            }
         }
         )*
     }
 }
 
-impl_num! { i8, i16, i32, i64, u8, u16, u32, u64, f32, f64 }
+impl_num! {
+    i8: SimdInt,
+    i16: SimdInt,
+    i32: SimdInt,
+    i64: SimdInt,
+    u8: SimdUint,
+    u16: SimdUint,
+    u32: SimdUint,
+    u64: SimdUint,
+    f32: SimdFloat,
+    f64: SimdFloat
+}
 
 /// A vector of signed numbers.
 pub trait Signed: Num + ops::Neg<Output = Self> {}
